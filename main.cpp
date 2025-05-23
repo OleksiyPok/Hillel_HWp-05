@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     std::cerr << "Usage: \""
               << std::filesystem::path(argv[0]).filename().string()
               << " <filter> <filename>\"\n";
-    std::cerr << "Filters: EVEN, ODD, GT<n>, LT<n>\n";
+    std::cerr << "Filters: ALL, EVEN, ODD, GT<n>, LT<n>\n";
     return 1;
   }
 
@@ -23,14 +23,8 @@ int main(int argc, char **argv) {
     }
 
     FileNumberReader reader;
-    {
-      // std::vector<int> raw_numbers = reader.read_numbers(filename);
-
-      // for (int n : raw_numbers) {
-      //   std::cout << n << std::endl;
-      // };
-    }
     std::vector<std::unique_ptr<INumberObserver>> observers;
+
     observers.push_back(std::make_unique<PrintObserver>());
     observers.push_back(std::make_unique<CountObserver>());
 

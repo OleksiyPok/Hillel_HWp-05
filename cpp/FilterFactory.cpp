@@ -6,6 +6,9 @@
 
 std::unique_ptr<INumberFilter>
 FilterFactory::create_filter(const std::string &filter_name) {
+  if (filter_name == "ALL") {
+    return std::make_unique<AllFilter>();
+  }
   if (filter_name == "EVEN") {
     return std::make_unique<EvenFilter>();
   }

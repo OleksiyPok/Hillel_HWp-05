@@ -1,4 +1,5 @@
 #include "Filters.hpp"
+bool AllFilter::keep(int number) const { return true; }
 
 bool EvenFilter::keep(int number) const { return number % 2 == 0; }
 

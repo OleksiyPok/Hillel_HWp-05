@@ -2,6 +2,11 @@
 
 #include "Interfaces.hpp"
 
+class AllFilter : public INumberFilter {
+public:
+  bool keep(int number) const override;
+};
+
 class EvenFilter : public INumberFilter {
 public:
   bool keep(int number) const override;
