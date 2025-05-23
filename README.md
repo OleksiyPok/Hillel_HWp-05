@@ -1,6 +1,9 @@
 Compilation command:
+
 $ g++ -std=c++20 -I hpp main.cpp cpp/*.cpp -o test.exe
+
 //====================================================
+
 TASK
 
 HW 5. Відпрацювання патернів Observer, Strategy, Factory, та принципів SOLID
