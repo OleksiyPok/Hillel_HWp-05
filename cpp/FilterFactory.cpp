@@ -1,40 +1,39 @@
-#include <iostream>
-#include <regex>
-
 #include "../hpp/FilterFactory.hpp"
-#include "../hpp/Filters.hpp"
+
+FilterFactory::FilterFactory() = default;
+
+FilterFactory &FilterFactory::get_instance() {
+  static FilterFactory instance;
+  return instance;
+}
+
+void FilterFactory::register_factory(const std::string &registered_filter_name,
+                                     FilterFactoryMethod factory_method) {
+  filtersFactoryRegister[registered_filter_name] = factory_method;
+}
 
 std::unique_ptr<INumberFilter>
-FilterFactory::create_filter(const std::string &filter_name) {
-  if (filter_name == "ALL") {
-    return std::make_unique<AllFilter>();
-  }
-  if (filter_name == "EVEN") {
-    return std::make_unique<EvenFilter>();
-  }
-  if (filter_name == "ODD") {
-    return std::make_unique<OddFilter>();
-  }
-  if (filter_name.starts_with("GT")) {
-    std::regex rgx("GT(\\d+)");
-    std::smatch match;
-    if (std::regex_match(filter_name, match, rgx)) {
-      int value = std::stoi(match[1]);
-      return std::make_unique<GreaterThanFilter>(value);
-    }
-  }
-  if (filter_name.starts_with("LT")) {
-    std::regex rgx("LT(\\d+)");
-    std::smatch match;
-    if (std::regex_match(filter_name, match, rgx)) {
-      int value = std::stoi(match[1]);
-      return std::make_unique<LessThanFilter>(value);
-    }
+FilterFactory::create_filter(const std::string &input_filter_name) const {
+  std::regex regex_with_number(R"(([A-Za-z]+)(\d+))");
+  std::regex regex_no_number(R"(([A-Za-z]+))");
+  std::smatch match;
+
+  std::string filter_name;
+
+  if (std::regex_match(input_filter_name, match, regex_with_number)) {
+    filter_name = match[1]; // GT or LT
+  } else if (std::regex_match(input_filter_name, match, regex_no_number)) {
+    filter_name = match[1]; // EVEN, ODD
+  } else {
+    std::cerr << "Invalid filter format: " << input_filter_name << std::endl;
+    return nullptr;
   }
 
-  std::cerr << "Error: Unknown filter name '" << filter_name << "'."
-            << std::endl
-            << "Filters: EVEN, ODD, GT<n>, LT<n>" << std::endl
-            << std::endl;
-  return nullptr;
+  auto it = filtersFactoryRegister.find(filter_name);
+  if (it != filtersFactoryRegister.end()) {
+    return it->second(input_filter_name);
+  } else {
+    std::cerr << "Unknown filter: " << filter_name << std::endl;
+    return nullptr;
+  }
 }

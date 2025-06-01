@@ -1,8 +1,7 @@
-#include "NumberProcessor.hpp"
+#include "../hpp/NumberProcessor.hpp"
 
-NumberProcessor::NumberProcessor(
-    INumberReader &r, INumberFilter &f,
-    std::vector<std::unique_ptr<INumberObserver>> obs)
+NumberProcessor::NumberProcessor(INumberReader &r, INumberFilter &f,
+                                 std::vector<std::unique_ptr<INumberObserver>> obs)
     : reader(r), filter(f), observers(std::move(obs)) {}
 
 void NumberProcessor::run(const std::string &filename) {

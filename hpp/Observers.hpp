@@ -1,6 +1,8 @@
 #pragma once
-#include "Interfaces.hpp"
+
 #include <iostream>
+
+#include "../hpp/Interfaces.hpp"
 
 class PrintObserver : public INumberObserver {
 public:

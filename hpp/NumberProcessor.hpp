@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "Interfaces.hpp"
+#include "../hpp/Interfaces.hpp"
 
 class NumberProcessor {
   INumberReader &reader;

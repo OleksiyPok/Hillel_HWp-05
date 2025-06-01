@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Interfaces.hpp"
+#include "../hpp/Interfaces.hpp"
 
 class AllFilter : public INumberFilter {
 public:

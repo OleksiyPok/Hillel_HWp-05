@@ -1,5 +1,3 @@
-#include <fstream>
-#include <stdexcept>
 
 #include "../hpp/FileNumberReader.hpp"
 
