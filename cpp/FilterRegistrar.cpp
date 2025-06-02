@@ -1,34 +1,26 @@
 #include "../hpp/FilterRegistrar.hpp"
 
 void FilterRegistrar::register_all_filters(FilterFactory &factory) {
-  factory.register_factory("ALL",
-                           [](const std::string &) { return std::make_unique<AllFilter>(); });
+  factory.register_factory({[](const std::string &fkey) { return fkey == "ALL"; },
+                            [](const std::string &) { return std::make_unique<AllFilter>(); }});
 
-  factory.register_factory("EVEN",
-                           [](const std::string &) { return std::make_unique<EvenFilter>(); });
+  factory.register_factory({[](const std::string &fkey) { return fkey == "EVEN"; },
+                            [](const std::string &) { return std::make_unique<EvenFilter>(); }});
 
-  factory.register_factory("ODD",
-                           [](const std::string &) { return std::make_unique<OddFilter>(); });
-
-  factory.register_factory(
-      "GT", [](const std::string &input_filterName) -> std::unique_ptr<INumberFilter> {
-        std::regex rgx("GT(\\d+)");
-        std::smatch match;
-        if (std::regex_match(input_filterName, match, rgx)) {
-          int threshold = std::stoi(match[1]);
-          return std::make_unique<GreaterThanFilter>(threshold);
-        }
-        return std::unique_ptr<INumberFilter>(nullptr);
-      });
+  factory.register_factory({[](const std::string &fkey) { return fkey == "ODD"; },
+                            [](const std::string &) { return std::make_unique<OddFilter>(); }});
 
   factory.register_factory(
-      "LT", [](const std::string &input_filterName) -> std::unique_ptr<INumberFilter> {
-        std::regex rgx("LT(\\d+)");
-        std::smatch match;
-        if (std::regex_match(input_filterName, match, rgx)) {
-          int threshold = std::stoi(match[1]);
-          return std::make_unique<LessThanFilter>(threshold);
-        }
-        return std::unique_ptr<INumberFilter>(nullptr);
-      });
+      {[](const std::string &fkey) { return std::regex_match(fkey, std::regex("GT\\d+")); },
+       [](const std::string &fkey) {
+         int n = std::stoi(fkey.substr(2));
+         return std::make_unique<GreaterThanFilter>(n);
+       }});
+
+  factory.register_factory(
+      {[](const std::string &fkey) { return std::regex_match(fkey, std::regex("LT\\d+")); },
+       [](const std::string &fkey) {
+         int n = std::stoi(fkey.substr(2));
+         return std::make_unique<LessThanFilter>(n);
+       }});
 }

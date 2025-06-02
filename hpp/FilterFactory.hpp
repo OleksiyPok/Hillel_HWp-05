@@ -10,21 +10,23 @@
 #include "../hpp/Filters.hpp"
 #include "../hpp/Interfaces.hpp"
 
+struct FilterFactoryEntry {
+  std::function<bool(const std::string &)> matches;
+  std::function<std::unique_ptr<INumberFilter>(const std::string &)> create;
+};
+
 class FilterFactory {
 private:
   FilterFactory();
   FilterFactory(const FilterFactory &) = delete;
   FilterFactory &operator=(const FilterFactory &) = delete;
 
-  using FilterFactoryMethod = std::function<std::unique_ptr<INumberFilter>(const std::string &)>;
-
-  std::unordered_map<std::string, FilterFactoryMethod> filtersFactoryRegister;
+  std::vector<FilterFactoryEntry> entries;
 
 public:
   static FilterFactory &get_instance();
 
-  void register_factory(const std::string &registered_filter_name,
-                        FilterFactoryMethod factory_method);
+  void register_factory(FilterFactoryEntry entry);
 
   std::unique_ptr<INumberFilter> create_filter(const std::string &input_filter_name) const;
 };
