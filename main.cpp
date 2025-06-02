@@ -13,16 +13,16 @@ int main(int argc, char **argv) {
       return 1;
     }
 
-    std::string input_filterName = argv[1];
-    std::string filename = argv[2];
-
     FilterFactory &filterFactory = FilterFactory::get_instance();
     FilterRegistrar::register_all_filters(filterFactory);
+
+    std::string input_filterName = argv[1];
+    std::string filename = argv[2];
 
     std::unique_ptr<INumberFilter> filter = filterFactory.create_filter(input_filterName);
 
     if (!filter) {
-      std::cerr << "Unknown filter name: " << input_filterName << std::endl;
+      std::cerr << "Unknown filter: " << input_filterName << std::endl;
       return 1;
     }
 
