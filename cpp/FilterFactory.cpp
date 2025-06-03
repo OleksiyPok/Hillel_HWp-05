@@ -14,8 +14,6 @@ void FilterFactory::register_factory(FilterFactoryEntry entry) {
 std::unique_ptr<INumberFilter>
 FilterFactory::create_filter(const std::string &input_filter_name) const {
 
-  std::cout << "Filter name: " << input_filter_name << std::endl;
-
   for (const auto &entry : entries) {
     if (entry.matches(input_filter_name)) {
       return entry.create(input_filter_name);
